@@ -1,0 +1,43 @@
+query{
+  customers{
+    id
+    firstName
+    lastName
+    email
+    address
+    zipCode
+    city
+    phoneNumber
+    __typename
+  }
+}
+
+query{
+  customerByEmail(email: "eramos2@plala.or.jp"){
+    id
+    firstName
+    lastName
+    email
+    address
+    zipCode
+    city
+    phoneNumber
+    __typename
+  }
+}
+
+mutation{
+  addCustomer(input: {
+    firstName:"John"
+    lastName:"Doe"
+    email:"john.doe@google.com"
+    phoneNumber:"+421951321789"
+    address:"Up State 12"
+    city:"Anytown"
+    state:"KS"
+    zipCode:"45689"
+  }
+  ) {
+    id
+  }
+}
