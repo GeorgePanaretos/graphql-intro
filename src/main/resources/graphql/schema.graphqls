@@ -10,8 +10,23 @@ type Customer {
     zipCode: String!
 }
 
+input CustomerInput {
+    firstName: String!
+    lastName: String!
+    email: String!
+    phoneNumber: String!
+    address: String!
+    city: String!
+    state: String!
+    zipCode: String!
+}
+
 type Query{
     customers: [Customer]!
     customerById(id: ID): Customer
     customerByEmail(email: String): Customer
+}
+
+type Mutation{
+    addCustomer(input: CustomerInput): Customer
 }
