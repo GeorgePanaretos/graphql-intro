@@ -35,7 +35,7 @@ public class CustomerController {
     }
 
     @MutationMapping
-    public Customer addCustomer(@Argument(name="input") CustomerInput customerInput){
+    public Customer addCustomer(@Argument(name = "input") CustomerInput customerInput) {
         return this.customerRepository.save(customerInput.getCustomerEntity());
     }
 }
