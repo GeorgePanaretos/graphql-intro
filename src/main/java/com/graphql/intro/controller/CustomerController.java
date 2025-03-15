@@ -5,6 +5,7 @@ import com.graphql.intro.data.Customer;
 import com.graphql.intro.data.CustomerInput;
 import com.graphql.intro.repo.CustomerRepository;
 import com.graphql.intro.service.SubscriptionService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
@@ -37,25 +38,19 @@ public class CustomerController {
         return this.customerRepository.findCustomerByEmail(email);
     }
 
-//    @MutationMapping
-//    public Customer addCustomer(@Argument(name = "input") CustomerInput customerInput) {
-//        Customer customer = this.customerRepository.save(customerInput.getCustomerEntity());
-//        subscriptionService.publishCustomer(customer); // ✅ New approach
-//        return customer;
-//    }
-@MutationMapping
-public Customer addCustomer(@Argument(name = "input") CustomerInput customerInput) {
-    // ✅ Check if customer with this email already exists
-    Customer existingCustomer = customerRepository.findCustomerByEmail(customerInput.getEmail());
 
-    if (existingCustomer != null) {
-        System.out.println("⚠️ Customer with email already exists: " + existingCustomer.getEmail());
-        return existingCustomer; // ✅ Return the existing customer instead of throwing an error
+    @MutationMapping
+    public Customer addCustomer(@Valid @Argument(name = "input") CustomerInput customerInput) {
+        // ✅ Check if customer with this email already exists
+        Customer existingCustomer = customerRepository.findCustomerByEmail(customerInput.getEmail());
+
+        if (existingCustomer != null) {
+            throw new IllegalArgumentException("⚠️ Customer with email already exists: " + existingCustomer.getEmail());
+        }
+
+        // ✅ Email is unique, so we can safely insert the new customer
+        Customer customer = this.customerRepository.save(customerInput.getCustomerEntity());
+        subscriptionService.publishCustomer(customer); // Notify subscriptions
+        return customer;
     }
-
-    // ✅ Email is unique, so we can safely insert the new customer
-    Customer customer = this.customerRepository.save(customerInput.getCustomerEntity());
-    subscriptionService.publishCustomer(customer); // Notify subscriptions
-    return customer;
-}
 }

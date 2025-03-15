@@ -7,21 +7,30 @@ This project is a **Spring Boot** application designed to introduce and demonstr
 - **Spring Boot** with **Spring GraphQL**
 - **JPA and Hibernate** for database interactions
 - **Mutation and Query support** for adding and retrieving customers
-- **Subscription support** for real-time updates when customers are added
+- **Subscription support** for real-time updates when customers, orders, or products are added
+- **Input validation** to enforce correct data entry and prevent errors
 
 ## 📂 Project Structure
 ```
 /src/main/java/com/graphql/intro
 │── controller/
 │   ├── CustomerController.java     # Handles GraphQL queries and mutations
+│   ├── OrderController.java        # Handles GraphQL queries and mutations for orders
+│   ├── ProductController.java      # Handles GraphQL queries and mutations for products
 │   ├── SubscriptionController.java # Handles GraphQL subscriptions
 │── data/
 │   ├── Customer.java               # Entity class representing a customer
-│   ├── CustomerInput.java          # DTO for input handling
+│   ├── Order.java                  # Entity class representing an order
+│   ├── Product.java                # Entity class representing a product
+│   ├── CustomerInput.java          # DTO for customer input handling
 │── repo/
-│   ├── CustomerRepository.java     # JPA Repository for database interactions
+│   ├── CustomerRepository.java     # JPA Repository for customer database interactions
+│   ├── OrderRepository.java        # JPA Repository for order database interactions
+│   ├── ProductRepository.java      # JPA Repository for product database interactions
 │── service/
 │   ├── SubscriptionService.java    # Manages real-time subscription events
+│── exception/
+│   ├── GraphQLExceptionHandler.java # Handles validation and database errors in GraphQL
 │── Application.java                # Main Spring Boot application
 ```
 
@@ -104,7 +113,7 @@ mutation {
 ```
 
 ### 📡 Subscriptions (Real-time Updates)
-GraphQL subscriptions allow clients to listen for real-time updates when new customers are added.
+GraphQL subscriptions allow clients to listen for real-time updates when new customers, orders, or products are added.
 
 #### Subscribe to new customer additions:
 ```graphql
@@ -118,10 +127,102 @@ subscription {
 }
 ```
 
+#### Subscribe to new orders:
+```graphql
+subscription {
+  orderAdded {
+    id
+    customer {
+      firstName
+    }
+    salesperson {
+      firstName
+    }
+  }
+}
+```
+
+#### Subscribe to new products:
+```graphql
+subscription {
+  productAdded {
+    id
+    name
+    price
+  }
+}
+```
+
 #### Steps to Test:
-1️⃣ Start the **subscription** query above and keep it running.
-2️⃣ Run the **addCustomer** mutation.
-3️⃣ You will automatically receive the new customer in your subscription response in real-time.
+1️⃣ Start the **subscription** query above and keep it running.  
+2️⃣ Run the **addOrder** or **addProduct** mutation.  
+3️⃣ You will automatically receive the new order/product in your subscription response in real-time.
+
+## ✅ Input Validation
+This project includes **GraphQL input validation** to ensure data integrity.
+
+#### Example: Enforcing validation on `addCustomer`
+```java
+@MutationMapping
+public Customer addCustomer(@Valid @Argument(name = "input") CustomerInput customerInput) {
+    Customer existingCustomer = customerRepository.findCustomerByEmail(customerInput.getEmail());
+    if (existingCustomer != null) {
+        throw new IllegalArgumentException("Customer with this email already exists!");
+    }
+    return customerRepository.save(customerInput.getCustomerEntity());
+}
+```
+
+### 🔥 Testing Validation
+#### ❌ Bad Request (Invalid Email)
+```graphql
+mutation {
+  addCustomer(input: {
+    firstName: "John",
+    lastName: "Doe",
+    email: "invalid-email",
+    phoneNumber: "123456789",
+    address: "123 Main St",
+    city: "New York",
+    state: "NY",
+    zipCode: "10001"
+  }) {
+    id
+    firstName
+    lastName
+  }
+}
+```
+✅ **Response:**
+```json
+{
+  "errors": [
+    {
+      "message": "Validation Error: Email format is invalid."
+    }
+  ]
+}
+```
+
+#### ✅ Valid Request (Success)
+```graphql
+mutation {
+  addCustomer(input: {
+    firstName: "Jane",
+    lastName: "Doe",
+    email: "jane.doe@example.com",
+    phoneNumber: "+1234567890",
+    address: "456 Elm St",
+    city: "Los Angeles",
+    state: "CA",
+    zipCode: "90001"
+  }) {
+    id
+    firstName
+    lastName
+  }
+}
+```
 
 ## 📚 Learning Resources
 - [GraphQL Java Documentation](https://www.graphql-java.com/documentation/)
