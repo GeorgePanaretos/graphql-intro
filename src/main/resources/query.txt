@@ -41,3 +41,35 @@ mutation{
     id
   }
 }
+
+subscription {
+  customerAdded {
+    firstName
+    lastName
+    email
+    phoneNumber
+    address
+    city
+    state
+    zipCode
+  }
+}
+
+mutation{
+  addCustomer(input: {
+    firstName: "Kyrios"
+    lastName: "Poutsa"
+    email: "koulasa@mail.com"
+    phoneNumber: "6935499"
+    address: "Palamari 24"
+    city: "Malakia"
+    state: "KS"
+    zipCode: "1234"
+  })
+  {
+    id
+    firstName
+    lastName
+    email
+  }
+}

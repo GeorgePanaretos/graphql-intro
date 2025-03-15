@@ -56,6 +56,25 @@ input CustomerInput {
     zipCode: String!
 }
 
+input OrderLineInput {
+    productId: ID!
+    quantity: Int!
+}
+
+input OrderInput {
+    customerId: ID!
+    salespersonId: ID!
+    orderLines: [OrderLineInput]!
+}
+
+input ProductInput {
+    name: String!
+    size: Int!
+    variety: String!
+    price: Float!
+    status: String!
+}
+
 type Query{
     customers: [Customer]!
     customerById(id: ID): Customer
@@ -69,5 +88,13 @@ type Query{
 }
 
 type Mutation{
-    addCustomer(input: CustomerInput): Customer
+    addCustomer(input: CustomerInput!): Customer
+    addOrder(input: OrderInput!): Order
+    addProduct(input: ProductInput!): Product
+}
+
+type Subscription {
+    customerAdded: Customer
+    orderAdded: Order
+    productAdded: Product
 }
