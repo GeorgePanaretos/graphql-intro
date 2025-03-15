@@ -6,11 +6,14 @@ import com.graphql.intro.data.CustomerInput;
 import com.graphql.intro.repo.CustomerRepository;
 import com.graphql.intro.service.SubscriptionService;
 import jakarta.validation.Valid;
+import org.dataloader.DataLoader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.stereotype.Controller;
+
+import java.util.concurrent.CompletableFuture;
 
 @Controller
 public class CustomerController {
@@ -31,6 +34,11 @@ public class CustomerController {
     @QueryMapping
     public Customer customerById(@Argument Long id) {
         return this.customerRepository.findById(id).orElseThrow();
+    }
+
+    @QueryMapping
+    public CompletableFuture<Customer> customerById(@Argument Long id, DataLoader<Long, Customer> customerDataLoader) {
+        return customerDataLoader.load(id);
     }
 
     @QueryMapping

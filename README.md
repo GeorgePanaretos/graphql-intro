@@ -9,6 +9,8 @@ This project is a **Spring Boot** application designed to introduce and demonstr
 - **Mutation and Query support** for adding and retrieving customers
 - **Subscription support** for real-time updates when customers, orders, or products are added
 - **Input validation** to enforce correct data entry and prevent errors
+- **Optimized execution with DataLoader to prevent N+1 problem**
+- **Asynchronous query execution for better performance**
 
 ## 📂 Project Structure
 ```
@@ -223,6 +225,44 @@ mutation {
   }
 }
 ```
+## 🛠 GraphQL Execution Optimization
+
+### 🔹 Using DataLoader to Prevent N+1 Problem
+GraphQL execution is optimized using **DataLoader**, which batches multiple queries into a single database call.
+
+#### Example: Batching Customer Queries
+```java
+@QueryMapping
+public CompletableFuture<Customer> customerById(@Argument Long id, DataLoader<Long, Customer> customerDataLoader) {
+    return customerDataLoader.load(id);
+}
+```
+✅ **Prevents multiple redundant queries and improves database efficiency.**
+
+### 🔹 Enabling Asynchronous Execution
+To improve performance, enable async execution in `application.properties`:
+```properties
+spring.graphql.execution-strategy.query=async
+spring.graphql.execution-strategy.mutation=async_serial
+```
+✅ Queries execute in parallel while mutations remain sequential.
+
+### 🔹 Applying Execution Optimization to Orders and Products
+#### Example: Optimizing `orderById` with DataLoader
+```java
+@QueryMapping
+public CompletableFuture<Order> orderById(@Argument Long id, DataLoader<Long, Order> orderDataLoader) {
+    return orderDataLoader.load(id);
+}
+```
+#### Example: Optimizing `productById` with DataLoader
+```java
+@QueryMapping
+public CompletableFuture<Product> productById(@Argument Long id, DataLoader<Long, Product> productDataLoader) {
+    return productDataLoader.load(id);
+}
+```
+✅ **This ensures efficient batch loading of orders and products, reducing database queries.**
 
 ## 📚 Learning Resources
 - [GraphQL Java Documentation](https://www.graphql-java.com/documentation/)
