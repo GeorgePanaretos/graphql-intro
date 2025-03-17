@@ -89,6 +89,8 @@ type Query{
 
 type Mutation{
     addCustomer(input: CustomerInput!): GraphQLResponseCustomer!
+    updateCustomer(id: ID!, input: CustomerInput!): GraphQLResponseCustomer
+    deleteCustomer(id: ID!): GraphQLResponseBoolean
     addOrder(input: OrderInput!): GraphQLResponseOrder!
     addProduct(input: ProductInput!): GraphQLResponseProduct!
 }
@@ -109,6 +111,12 @@ type GraphQLResponseCustomer {
     success: Boolean!
     message: String
     data: Customer
+}
+
+type GraphQLResponseBoolean {
+    success: Boolean!
+    message: String
+    data: Boolean
 }
 
 type GraphQLResponseProduct {

@@ -158,3 +158,59 @@ query {
     }
     }
   }
+
+{
+  __schema {
+    types {
+      name
+      kind
+      description
+    }
+  }
+}
+
+{
+  __schema {
+    queryType {
+      fields {
+        name
+        description
+      }
+    }
+    mutationType {
+      fields {
+        name
+        description
+      }
+    }
+  }
+}
+
+
+mutation {
+  updateCustomer(id: 1, input: {
+    firstName: "Updated Name"
+    lastName: "Updated Last Name"
+    email: "updated.email@example.com"
+    phoneNumber: "9876543210"
+    address: "Updated Address"
+    city: "Updated City"
+    state: "UT"
+    zipCode: "99999"
+  }) {
+    success
+    message
+    data {
+      id
+      firstName
+      lastName
+    }
+  }
+}
+
+mutation {
+  deleteCustomer(id: 1) {
+    success
+    message
+  }
+}

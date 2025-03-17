@@ -61,4 +61,36 @@ public class CustomerController {
         subscriptionService.publishCustomer(customer);
         return GraphQLResponse.success(customer);
     }
+
+    @MutationMapping
+    public GraphQLResponse<Customer> updateCustomer(@Argument Long id, @Valid @Argument(name = "input") Customer updatedCustomer) {
+        Optional<Customer> existingCustomer = customerRepository.findById(id);
+        if (existingCustomer.isEmpty()) {
+            return GraphQLResponse.error("Customer not found.");
+        }
+
+        Customer customer = existingCustomer.get();
+        customer.setFirstName(updatedCustomer.getFirstName());
+        customer.setLastName(updatedCustomer.getLastName());
+        customer.setEmail(updatedCustomer.getEmail());
+        customer.setPhoneNumber(updatedCustomer.getPhoneNumber());
+        customer.setAddress(updatedCustomer.getAddress());
+        customer.setCity(updatedCustomer.getCity());
+        customer.setState(updatedCustomer.getState());
+        customer.setZipCode(updatedCustomer.getZipCode());
+
+        Customer savedCustomer = customerRepository.save(customer);
+        return GraphQLResponse.success(savedCustomer);
+    }
+
+    @MutationMapping
+    public GraphQLResponse<Boolean> deleteCustomer(@Argument Long id) {
+        Optional<Customer> customer = customerRepository.findById(id);
+        if (customer.isEmpty()) {
+            return GraphQLResponse.error("Customer not found.");
+        }
+
+        customerRepository.deleteById(id);
+        return GraphQLResponse.success(true);
+    }
 }
