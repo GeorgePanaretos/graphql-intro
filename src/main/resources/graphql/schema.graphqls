@@ -88,13 +88,31 @@ type Query{
 }
 
 type Mutation{
-    addCustomer(input: CustomerInput!): Customer
-    addOrder(input: OrderInput!): Order
-    addProduct(input: ProductInput!): Product
+    addCustomer(input: CustomerInput!): GraphQLResponseCustomer!
+    addOrder(input: OrderInput!): GraphQLResponseOrder!
+    addProduct(input: ProductInput!): GraphQLResponseProduct!
 }
 
 type Subscription {
     customerAdded: Customer
     orderAdded: Order
     productAdded: Product
+}
+
+type GraphQLResponseOrder {
+    success: Boolean!
+    message: String
+    data: Order
+}
+
+type GraphQLResponseCustomer {
+    success: Boolean!
+    message: String
+    data: Customer
+}
+
+type GraphQLResponseProduct {
+    success: Boolean!
+    message: String
+    data: Product
 }
