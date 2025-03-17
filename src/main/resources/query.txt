@@ -73,3 +73,88 @@ mutation{
     email
   }
 }
+
+query{products {
+  id
+  name
+  status
+  variety
+  price
+  size
+}
+}
+
+mutation {
+  addProduct(input: {
+    name: "Soda"
+    size: 20
+    variety: "Green Apple"
+    price: 1.99
+    status: "ACTIVE"
+  }) {
+    success
+    message
+    data {
+      id
+      name
+      size
+      variety
+      price
+      status
+    }
+  }
+}
+
+mutation {
+  addOrder(input: {
+    customerId: 1,
+    salespersonId: 2,
+    orderLines: [
+      { productId: "MWBLU20", quantity: 3 }
+    ]
+  }) {
+    success
+    message
+    data {
+      id
+      customer {
+        firstName
+      }
+      orderLines {
+        product {
+          name
+        }
+        quantity
+      }
+    }
+  }
+}
+
+query {
+  orderById(id: "H2-1203") {
+    id
+    customer {
+      firstName
+      lastName
+    }
+    orderLines {
+      product {
+        name
+      }
+      quantity
+    }
+  }
+}
+
+query {
+  orders {
+    id
+    customer {
+      firstName
+      lastName
+    }
+    salesperson{
+      phoneNumber
+    }
+    }
+  }
