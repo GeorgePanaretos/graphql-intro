@@ -8,7 +8,6 @@ import java.math.BigDecimal;
 @Data
 @Table(name = "PRODUCTS")
 public class Product {
-
     @Id
     @Column(name = "PRODUCT_ID")
     private String id;
@@ -22,5 +21,4 @@ public class Product {
     private BigDecimal price;
     @Column(name = "STATUS")
     private String status;
-
 }

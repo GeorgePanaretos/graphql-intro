@@ -14,9 +14,9 @@ public class ApplicationExceptionHandler extends DataFetcherExceptionResolverAda
     @Override
     protected GraphQLError resolveToSingleError(Throwable ex, DataFetchingEnvironment env) {
         ErrorType type = null;
-        if (ex instanceof DataIntegrityViolationException){
+        if (ex instanceof DataIntegrityViolationException) {
             type = ErrorType.BAD_REQUEST;
-        }else{
+        } else {
             type = ErrorType.INTERNAL_ERROR;
         }
         return GraphqlErrorBuilder.newError(env)

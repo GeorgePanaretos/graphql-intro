@@ -21,4 +21,8 @@ public class OrderLine {
     @Column(name = "QUANTITY")
     private int quantity;
 
+    public  OrderLine(){}
+
+    public OrderLine(Order order, Product product, int quantity) {
+    }
 }

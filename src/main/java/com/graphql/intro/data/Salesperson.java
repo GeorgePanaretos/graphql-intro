@@ -7,7 +7,6 @@ import lombok.Data;
 @Data
 @Table(name = "SALESPEOPLE")
 public class Salesperson {
-
     @Id
     @Column(name = "SALESPERSON_ID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,5 +27,4 @@ public class Salesperson {
     private String state;
     @Column(name = "ZIPCODE")
     private String zipCode;
-
 }
