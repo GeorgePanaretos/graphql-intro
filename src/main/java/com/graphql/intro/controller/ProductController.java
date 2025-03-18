@@ -33,8 +33,8 @@ public class ProductController {
     }
 
     @QueryMapping
-    public Product productById(@Argument Long id) {
-       return  this.productRepository.findById(String.valueOf(id))
+    public Product productById(@Argument String id) {
+       return  this.productRepository.findById(id)
                .orElseThrow(() -> new IllegalArgumentException("Product not found."));
     }
 

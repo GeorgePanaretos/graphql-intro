@@ -1,13 +1,15 @@
 package com.graphql.intro.data;
 
 import jakarta.validation.constraints.NotNull;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-@Getter
-@Setter
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class OrderInput {
 
     @NotNull(message = "Customer ID is required.")
@@ -19,11 +21,4 @@ public class OrderInput {
     @NotNull(message = "Order lines cannot be empty.")
     private List<OrderLineInput> orderLines;
 
-    public OrderInput() {}
-
-    public OrderInput(Long customerId, Long salespersonId, List<OrderLineInput> orderLines) {
-        this.customerId = customerId;
-        this.salespersonId = salespersonId;
-        this.orderLines = orderLines;
-    }
 }

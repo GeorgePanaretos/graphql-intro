@@ -2,9 +2,11 @@ package com.graphql.intro.data;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Data
+@NoArgsConstructor
 @Table(name = "ORDER_LINES")
 public class OrderLine {
 
@@ -20,8 +22,6 @@ public class OrderLine {
     private Product product;
     @Column(name = "QUANTITY")
     private int quantity;
-
-    public  OrderLine(){}
 
     public OrderLine(Order order, Product product, int quantity) {
     }
