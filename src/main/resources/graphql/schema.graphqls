@@ -87,13 +87,16 @@ type Query{
     orderById(id: ID): Order
 }
 
-type Mutation{
+type Mutation {
     addCustomer(input: CustomerInput!): GraphQLResponseCustomer!
     updateCustomer(id: ID!, input: CustomerInput!): GraphQLResponseCustomer
     deleteCustomer(id: ID!): GraphQLResponseBoolean
     addOrder(input: OrderInput!): GraphQLResponseOrder!
+    updateOrder(id: ID!, input: OrderInput!): GraphQLResponseOrder
+    deleteOrder(id: ID!): GraphQLResponseBoolean
     addProduct(input: ProductInput!): GraphQLResponseProduct!
 }
+
 
 type Subscription {
     customerAdded: Customer
