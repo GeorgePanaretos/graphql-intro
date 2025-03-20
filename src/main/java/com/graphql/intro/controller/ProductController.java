@@ -28,7 +28,7 @@ public class ProductController {
     }
 
     @QueryMapping
-    public Iterable<Product> products() {
+    public List<Product> products() {
         return productRepository.findAll();
     }
 
