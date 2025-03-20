@@ -302,6 +302,7 @@ subscription {
 **Description:** Subscribes to real-time updates when a new customer is added.
 
 ---
+### 1️⃣5️⃣5️**Update Order Details**
 
 ```graphql
 mutation {
@@ -333,6 +334,10 @@ mutation {
   }
 }
 ```
+**Description:** Subscribes to real-time updates when a new order is added.
+
+---
+### 1️⃣6️⃣ **Delete an Order**
 
 ```graphql
 mutation {
@@ -342,5 +347,8 @@ mutation {
     data
   }
 }
-
 ```
+
+**Description:** Deletes an order from the system.
+
+---
