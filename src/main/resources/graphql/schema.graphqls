@@ -95,8 +95,8 @@ type Mutation {
     updateOrder(id: ID!, input: OrderInput!): GraphQLResponseOrder
     deleteOrder(id: ID!): GraphQLResponseBoolean
     addProduct(input: ProductInput!): GraphQLResponseProduct!
+    deleteProduct(id: ID!): GraphQLResponseBoolean
 }
-
 
 type Subscription {
     customerAdded: Customer

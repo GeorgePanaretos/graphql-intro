@@ -1,7 +1,10 @@
 package com.graphql.intro.controller;
 
+import com.graphql.intro.data.Order;
+import com.graphql.intro.data.OrderLine;
 import com.graphql.intro.data.Product;
 import com.graphql.intro.data.ProductInput;
+import com.graphql.intro.repo.OrderLineRepository;
 import com.graphql.intro.repo.ProductRepository;
 import com.graphql.intro.response.GraphQLResponse;
 import com.graphql.intro.service.SubscriptionService;
@@ -20,11 +23,13 @@ import java.util.UUID;
 public class ProductController {
     private final ProductRepository productRepository;
     private final SubscriptionService subscriptionService;
+    private final OrderLineRepository orderLineRepository;
 
     @Autowired
-    public ProductController(ProductRepository productRepository, SubscriptionService subscriptionService) {
+    public ProductController(ProductRepository productRepository, SubscriptionService subscriptionService, OrderLineRepository orderLineRepository) {
         this.productRepository = productRepository;
         this.subscriptionService = subscriptionService;
+        this.orderLineRepository = orderLineRepository;
     }
 
     @QueryMapping
@@ -64,5 +69,27 @@ public class ProductController {
         subscriptionService.publishProduct(savedProduct);
 
         return GraphQLResponse.success(savedProduct);
+    }
+
+    @MutationMapping
+    public GraphQLResponse<Boolean> deleteProduct(@Argument String id) {
+        Optional<Product> product = productRepository.findById(id);
+
+        if (product.isEmpty()) {
+            return GraphQLResponse.error("Product not found.");
+        }
+
+        // 🔥 Step 1: Fetch all order lines associated with this product
+        List<OrderLine> orderLines = orderLineRepository.findByProductId(id);
+
+        if (!orderLines.isEmpty()) {
+            // 🔥 Step 2: Remove order lines before deleting the product
+            orderLineRepository.deleteByProductId(id);
+        }
+
+        // 🔥 Step 3: Delete the product
+        productRepository.deleteById(id);
+
+        return GraphQLResponse.success(true);
     }
 }

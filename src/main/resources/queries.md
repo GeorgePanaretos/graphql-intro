@@ -352,3 +352,17 @@ mutation {
 **Description:** Deletes an order from the system.
 
 ---
+
+### 1️⃣7️⃣ **Delete a Product**
+```graphql
+mutation {
+    deleteProduct(id: "MWBLU20") {
+        success
+        message
+    }
+}
+```
+
+**Description:** Deletes a product from the system.
+
+---
