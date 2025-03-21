@@ -366,3 +366,31 @@ mutation {
 **Description:** Deletes a product from the system.
 
 ---
+
+### 1️⃣8️⃣ **Update a Product**
+
+```graphql
+mutation {
+    updateProduct(id: "MWBLU20", input: {
+        name: "Updated Mineral Water"
+        size: 25
+        price: 2.49
+        variety: "Updated Variety"
+        status: "ACTIVE"
+    }) {
+        success
+        message
+        data {
+            id
+            name
+            size
+            price
+            variety
+            status
+        }
+    }
+}
+```
+**Description:** Updates a product from the system.
+
+---

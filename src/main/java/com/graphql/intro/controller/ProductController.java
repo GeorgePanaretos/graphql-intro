@@ -39,8 +39,8 @@ public class ProductController {
 
     @QueryMapping
     public Product productById(@Argument String id) {
-       return  this.productRepository.findById(id)
-               .orElseThrow(() -> new IllegalArgumentException("Product not found."));
+        return this.productRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Product not found."));
     }
 
     @MutationMapping
@@ -69,6 +69,38 @@ public class ProductController {
         subscriptionService.publishProduct(savedProduct);
 
         return GraphQLResponse.success(savedProduct);
+    }
+
+    @MutationMapping
+    public GraphQLResponse<Product> updateProduct(@Argument String id, @Valid @Argument(name = "input") ProductInput productInput) {
+        // Check if the product exists
+        Product existingProduct = productRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Product not found"));
+
+        // Update only provided fields
+        if (productInput.getName() != null) {
+            existingProduct.setName(productInput.getName());
+        }
+        if (productInput.getSize() != 0) {
+            existingProduct.setSize(productInput.getSize());
+        }
+        if (productInput.getVariety() != null) {
+            existingProduct.setVariety(productInput.getVariety());
+        }
+        if (productInput.getPrice() != null) {
+            existingProduct.setPrice(productInput.getPrice());
+        }
+        if (productInput.getStatus() != null) {
+            existingProduct.setStatus(productInput.getStatus());
+        }
+
+        // Save updated product
+        Product updatedProduct = productRepository.save(existingProduct);
+
+        // Publish update event for subscriptions
+        subscriptionService.publishProduct(updatedProduct);
+
+        return GraphQLResponse.success(updatedProduct);
     }
 
     @MutationMapping
